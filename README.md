@@ -24,7 +24,7 @@ ghostty-config/
 
 | Path | Description |
 |------|-------------|
-| `config` | Main configuration file — maps to `~/.config/ghostty/config` |
+| `config` | Main Ghostty configuration content used under `~/.config/ghostty` |
 
 ## Setup
 
@@ -33,7 +33,4 @@ Symlink this repository into the Ghostty config directory:
 ```sh
 # Clone the repo
 git clone https://github.com/alexxyjiang/ghostty-config.git ~/.config/ghostty
-
-# Or symlink the config file if the directory already exists
-ln -sf /path/to/ghostty-config/config ~/.config/ghostty/config
 ```
