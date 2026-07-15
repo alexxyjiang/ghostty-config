@@ -13,19 +13,11 @@ Ghostty's local config path is therefore:
 ~/.config/ghostty/
 ```
 
-To store configs in a non-default location, set `$XDG_CONFIG_HOME` before launching Ghostty:
-
-```sh
-export XDG_CONFIG_HOME="$HOME/my-configs"
-# Ghostty will then look for config at $HOME/my-configs/ghostty/config
-```
-
 ## Repository Structure
 
 ```
 ghostty-config/
-├── config          # Main Ghostty configuration file
-└── themes/         # Custom color themes (*.conf files)
+└── config          # Main Ghostty configuration file
 ```
 
 ### Files
@@ -33,7 +25,6 @@ ghostty-config/
 | Path | Description |
 |------|-------------|
 | `config` | Main configuration file — maps to `~/.config/ghostty/config` |
-| `themes/` | Directory of custom themes — maps to `~/.config/ghostty/themes/` |
 
 ## Setup
 
@@ -43,7 +34,6 @@ Symlink this repository into the Ghostty config directory:
 # Clone the repo
 git clone https://github.com/alexxyjiang/ghostty-config.git ~/.config/ghostty
 
-# Or symlink individual files if the directory already exists
+# Or symlink the config file if the directory already exists
 ln -sf /path/to/ghostty-config/config ~/.config/ghostty/config
-ln -sf /path/to/ghostty-config/themes ~/.config/ghostty/themes
 ```
