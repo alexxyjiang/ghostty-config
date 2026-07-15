@@ -28,8 +28,6 @@ ghostty-config/
 
 ## Setup
 
-Symlink this repository into the Ghostty config directory:
-
 ```sh
 # Clone the repo
 git clone https://github.com/alexxyjiang/ghostty-config.git ~/.config/ghostty

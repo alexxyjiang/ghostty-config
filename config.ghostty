@@ -1,0 +1,27 @@
+# --- Appearance ---
+font-family = "IosevkaAlexJiang"
+font-family = "Noto Serif CJK SC"
+font-family = "ZhongHuaSongPlane00"
+font-family = "ZhongHuaSongPlane02"
+font-size = 18
+theme = GitHub Dark Default
+background-image = ~/.config/ghostty/your_name.png
+background-image-fit = cover
+background-opacity = 0.854
+
+# --- Behavior ---
+term = xterm-256color
+
+# --- Cursor ---
+cursor-style = block
+cursor-style-blink = true
+
+# --- Shell Integration ---
+shell-integration = zsh
+
+# --- Keybinds ---
+keybind = global:super+grave_accent=toggle_quick_terminal
+keybind = global:super+o=toggle_background_opacity
+
+# --- Mouse ---
+mouse-hide-while-typing = true
