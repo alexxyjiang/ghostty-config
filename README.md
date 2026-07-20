@@ -15,16 +15,18 @@ Ghostty's local config path is therefore:
 
 ## Repository Structure
 
+The repository root maps directly to `~/.config/ghostty/`.
+
 ```
-ghostty-config/
-└── config          # Main Ghostty configuration file
+~/.config/ghostty/   (repo root)
+└── config.ghostty    # Main Ghostty configuration file
 ```
 
 ### Files
 
 | Path | Description |
 |------|-------------|
-| `config` | Main Ghostty configuration content used under `~/.config/ghostty` |
+| `config.ghostty` | Main Ghostty configuration content |
 
 ## Setup
 
