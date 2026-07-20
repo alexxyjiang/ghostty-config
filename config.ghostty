@@ -8,6 +8,8 @@ theme = GitHub Dark Default
 background-image = ~/.config/ghostty/your_name.png
 background-image-fit = cover
 background-opacity = 0.854
+background-opacity-cells = true
+minimum-contrast = 1.146
 
 # --- Behavior ---
 term = xterm-256color
@@ -22,6 +24,11 @@ shell-integration = zsh
 # --- Keybinds ---
 keybind = global:super+grave_accent=toggle_quick_terminal
 keybind = global:super+o=toggle_background_opacity
+
+# --- Quick Terminal ---
+quick-terminal-autohide = true
+quick-terminal-position = center
+quick-terminal-size = 61.8%,38.2%
 
 # --- Mouse ---
 mouse-hide-while-typing = true
