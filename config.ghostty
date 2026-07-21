@@ -1,10 +1,10 @@
 # --- Appearance ---
-font-family = "IosevkaAlexJiang"
-font-family = "Noto Serif CJK SC"
-font-family = "ZhongHuaSongPlane00"
-font-family = "ZhongHuaSongPlane02"
+font-family = IosevkaAlexJiang
+font-family = Noto Serif CJK SC
+font-family = ZhongHuaSongPlane00
+font-family = ZhongHuaSongPlane02
 font-size = 18
-theme = GitHub Dark Default
+theme = Wombat
 background-image = ~/.config/ghostty/your_name.png
 background-image-fit = cover
 background-opacity = 0.854
