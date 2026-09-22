@@ -18,11 +18,15 @@ Usage: $0 [options] INPUT [OUTPUT]
 Create a ${TARGET_WIDTH}x${TARGET_HEIGHT} dark PNG wallpaper using fixed 2x antialiasing.
 
 Options:
-  -c, --contrast VALUE        Target HSL lightness deviation, 0-100% (default: ${DEFAULT_CONTRAST})
-  -s, --saturation VALUE      Target mean HSL saturation, 0-100% (default: ${DEFAULT_SATURATION})
-  -b, --brightness VALUE      Target mean HSL lightness, 0-100% (default: ${DEFAULT_BRIGHTNESS})
+  -c, --contrast VALUE        Target HSL lightness deviation (default: ${DEFAULT_CONTRAST})
+  -s, --saturation VALUE      Target mean HSL saturation (default: ${DEFAULT_SATURATION})
+  -b, --brightness VALUE      Target mean HSL lightness (default: ${DEFAULT_BRIGHTNESS})
   -o, --optimize-level VALUE  optipng level from 0 to 7 (default: ${DEFAULT_OPTIPNG_LEVEL})
   -h, --help                  Show this help
+
+For contrast, saturation, and brightness, VALUE may be a raw number from 0 to 100
+or one of these level aliases:
+  L0=23.61  L1=14.59  L2=9.017  L3=5.573  L4=3.444  L5=2.129
 
 If OUTPUT is omitted, INPUT-wallpaper.png is written beside the input file.
 Existing output files are never overwritten.
@@ -87,6 +91,22 @@ is_number() {
     }'
 }
 
+resolve_level() {
+    case "$1" in
+        L0) printf '%s\n' '23.61' ;;
+        L1) printf '%s\n' '14.59' ;;
+        L2) printf '%s\n' '9.017' ;;
+        L3) printf '%s\n' '5.573' ;;
+        L4) printf '%s\n' '3.444' ;;
+        L5) printf '%s\n' '2.129' ;;
+        L*)
+            error "unknown level alias: $1 (expected L0 through L5)"
+            return 1
+            ;;
+        *) printf '%s\n' "$1" ;;
+    esac
+}
+
 validate_range() {
     value=$1
     minimum=$2
@@ -133,9 +153,9 @@ while [ "$#" -gt 0 ]; do
                 exit 2
             fi
             case "$option" in
-                -c|--contrast) contrast=$2 ;;
-                -s|--saturation) saturation=$2 ;;
-                -b|--brightness) brightness=$2 ;;
+                -c|--contrast) contrast=$(resolve_level "$2") || exit 2 ;;
+                -s|--saturation) saturation=$(resolve_level "$2") || exit 2 ;;
+                -b|--brightness) brightness=$(resolve_level "$2") || exit 2 ;;
                 -o|--optimize-level) optimize_level=$2 ;;
             esac
             shift 2
