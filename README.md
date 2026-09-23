@@ -34,3 +34,24 @@ The repository root maps directly to `~/.config/ghostty/`.
 # Clone the repo
 git clone https://github.com/alexxyjiang/ghostty-config.git ~/.config/ghostty
 ```
+
+## Background Images
+
+The repository includes several background images you can use with Ghostty:
+
+- `kagaya_artemis.png` – default background referenced in `config.ghostty`.
+- `everest_sunset.png` – a sunset theme.
+- `clannad_kyou.png` – a bright, colorful image.
+
+To use a different image, edit the `background-image` line in `config.ghostty` to point to the desired file.
+
+## Generating Custom Wallpapers
+
+The `make.ghostty.background.sh` script can generate a dark PNG wallpaper of size 3840×2160 with configurable contrast, saturation, and brightness. Example:
+
+```sh
+./make.ghostty.background.sh path/to/source.jpg path/to/output.png
+```
+
+Run `./make.ghostty.background.sh -h` for detailed options.
+
