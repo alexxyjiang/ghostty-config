@@ -1,9 +1,9 @@
 #!/bin/sh
 
-DEFAULT_CONTRAST=2.129
+DEFAULT_CONTRAST=3.444
 DEFAULT_SATURATION=5.573
-DEFAULT_BRIGHTNESS=14.59
-DEFAULT_OPTIPNG_LEVEL=3
+DEFAULT_BRIGHTNESS=9.017
+DEFAULT_OPTIPNG_LEVEL=2
 
 TARGET_WIDTH=3840
 TARGET_HEIGHT=2160
@@ -18,11 +18,17 @@ Usage: $0 [options] INPUT [OUTPUT]
 Create a ${TARGET_WIDTH}x${TARGET_HEIGHT} dark PNG wallpaper using fixed 2x antialiasing.
 
 Options:
-  -c, --contrast VALUE        Target HSL lightness deviation (default: ${DEFAULT_CONTRAST})
-  -s, --saturation VALUE      Target mean HSL saturation (default: ${DEFAULT_SATURATION})
-  -b, --brightness VALUE      Target mean HSL lightness (default: ${DEFAULT_BRIGHTNESS})
-  -o, --optimize-level VALUE  optipng level from 0 to 7 (default: ${DEFAULT_OPTIPNG_LEVEL})
-  -h, --help                  Show this help
+  -c, --contrast VALUE          Target HSL lightness deviation (default: L4 (${DEFAULT_CONTRAST}))
+  -s, --saturation VALUE        Target mean HSL saturation (default: L3 (${DEFAULT_SATURATION}))
+  -b, --brightness VALUE        Target mean HSL lightness (default: L2 (${DEFAULT_BRIGHTNESS}))
+  -L0                           Set contrast, saturation, brightness to level L0 (23.61)
+  -L1                           Set contrast, saturation, brightness to level L1 (14.59)
+  -L2                           Set contrast, saturation, brightness to level L2 (9.017)
+  -L3                           Set contrast, saturation, brightness to level L3 (5.573)
+  -L4                           Set contrast, saturation, brightness to level L4 (3.444)
+  -L5                           Set contrast, saturation, brightness to level L5 (2.129)
+  -o, --optimize-level VALUE    optipng level from 0 to 7 (default: ${DEFAULT_OPTIPNG_LEVEL})
+  -h, --help                    Show this help
 
 For contrast, saturation, and brightness, VALUE may be a raw number from 0 to 100
 or one of these level aliases:
@@ -159,6 +165,14 @@ while [ "$#" -gt 0 ]; do
                 -o|--optimize-level) optimize_level=$2 ;;
             esac
             shift 2
+            ;;
+        -L[0-5])
+            level="L${1#-L}"
+            value=$(resolve_level "$level") || exit 2
+            contrast=$value
+            saturation=$value
+            brightness=$value
+            shift
             ;;
         -h|--help)
             usage
