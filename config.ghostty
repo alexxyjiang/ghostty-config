@@ -5,9 +5,9 @@ font-size = 18
 theme = Everest
 background-image = ~/.config/ghostty/kagaya_artemis.png
 background-image-fit = cover
-background-opacity = 0.854
+background-opacity = 0.8541
 background-opacity-cells = true
-minimum-contrast = 1.146
+minimum-contrast = 1.1459
 
 # --- Behavior ---
 term = xterm-256color
