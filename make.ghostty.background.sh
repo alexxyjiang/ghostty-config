@@ -7,15 +7,13 @@ DEFAULT_OPTIPNG_LEVEL=2
 
 TARGET_WIDTH=3840
 TARGET_HEIGHT=2160
-ANTIALIAS_SCALE=2
-RENDER_WIDTH=$((TARGET_WIDTH * ANTIALIAS_SCALE))
-RENDER_HEIGHT=$((TARGET_HEIGHT * ANTIALIAS_SCALE))
+DEFAULT_ANTIALIAS_SCALE=2
 
 usage() {
     cat <<EOF
 Usage: $0 [options] INPUT [OUTPUT]
 
-Create a ${TARGET_WIDTH}x${TARGET_HEIGHT} dark PNG wallpaper using fixed 2x antialiasing.
+Create a ${TARGET_WIDTH}x${TARGET_HEIGHT} dark PNG wallpaper using Lanczos supersampling.
 
 Options:
   -c, --contrast VALUE          Target HSL lightness deviation (default: L4 (${DEFAULT_CONTRAST}))
@@ -27,12 +25,16 @@ Options:
   -L3                           Set contrast, saturation, brightness to level L3 (5.573)
   -L4                           Set contrast, saturation, brightness to level L4 (3.444)
   -L5                           Set contrast, saturation, brightness to level L5 (2.129)
+  -a, --antialias-scale VALUE   Working-size multiplier from 1 to 8 (default: ${DEFAULT_ANTIALIAS_SCALE})
   -o, --optimize-level VALUE    optipng level from 0 to 7 (default: ${DEFAULT_OPTIPNG_LEVEL})
   -h, --help                    Show this help
 
 For contrast, saturation, and brightness, VALUE may be a raw number from 0 to 100
 or one of these level aliases:
   L0=23.61  L1=14.59  L2=9.017  L3=5.573  L4=3.444  L5=2.129
+
+Scale 1 processes directly at the target size; scale 2 balances quality and speed.
+Scale 8 reproduces the previous working size at a much higher processing cost.
 
 If OUTPUT is omitted, INPUT-wallpaper.png is written beside the input file.
 Existing output files are never overwritten.
@@ -136,6 +138,16 @@ validate_optimize_level() {
     esac
 }
 
+validate_antialias_scale() {
+    case "$1" in
+        [1-8]) ;;
+        *)
+            error 'antialias-scale must be an integer from 1 to 8'
+            exit 2
+            ;;
+    esac
+}
+
 path_identity() {
     path=$1
     directory=$(dirname -- "$path") || return 1
@@ -148,10 +160,11 @@ contrast=$DEFAULT_CONTRAST
 saturation=$DEFAULT_SATURATION
 brightness=$DEFAULT_BRIGHTNESS
 optimize_level=$DEFAULT_OPTIPNG_LEVEL
+antialias_scale=$DEFAULT_ANTIALIAS_SCALE
 
 while [ "$#" -gt 0 ]; do
     case "$1" in
-        -c|--contrast|-s|--saturation|-b|--brightness|-o|--optimize-level)
+        -c|--contrast|-s|--saturation|-b|--brightness|-o|--optimize-level|-a|--antialias-scale)
             option=$1
             if [ "$#" -lt 2 ]; then
                 error "$option requires a value"
@@ -163,6 +176,7 @@ while [ "$#" -gt 0 ]; do
                 -s|--saturation) saturation=$(resolve_level "$2") || exit 2 ;;
                 -b|--brightness) brightness=$(resolve_level "$2") || exit 2 ;;
                 -o|--optimize-level) optimize_level=$2 ;;
+                -a|--antialias-scale) antialias_scale=$2 ;;
             esac
             shift 2
             ;;
@@ -216,6 +230,9 @@ validate_range "$contrast" 0 100 contrast
 validate_range "$saturation" 0 100 saturation
 validate_range "$brightness" 0 100 brightness
 validate_optimize_level "$optimize_level"
+validate_antialias_scale "$antialias_scale"
+RENDER_WIDTH=$((TARGET_WIDTH * antialias_scale))
+RENDER_HEIGHT=$((TARGET_HEIGHT * antialias_scale))
 
 if [ ! -f "$input" ] || [ ! -r "$input" ]; then
     error "input is not a readable file: $input"
@@ -266,12 +283,16 @@ trap 'exit 129' HUP
 trap 'exit 130' INT
 trap 'exit 143' TERM
 
+# This intermediate is decoded twice. Skip PNG compression/filtering while
+# retaining the existing PNG bit-depth/clamping behavior for HSL statistics.
 if ! "$IMAGE_MAGICK" "$input" \
     -auto-orient \
     -filter Lanczos \
     -resize "${RENDER_WIDTH}x${RENDER_HEIGHT}^" \
     -gravity center \
     -extent "${RENDER_WIDTH}x${RENDER_HEIGHT}" \
+    -define png:compression-level=0 \
+    -define png:compression-filter=0 \
     "$resized_png"; then
     error 'ImageMagick failed to resize the image'
     exit 1

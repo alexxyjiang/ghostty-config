@@ -53,5 +53,27 @@ The `make.ghostty.background.sh` script can generate a dark PNG wallpaper of siz
 ./make.ghostty.background.sh path/to/source.jpg path/to/output.png
 ```
 
+The default pipeline uses a 2× working image and Lanczos downsampling to preserve
+smooth edges while processing 16× fewer intermediate pixels than the previous 8×
+setting. The temporary PNG skips compression; the final PNG is still optimized
+losslessly with `optipng`.
+
+Use `--antialias-scale` (`-a`) to choose the quality/speed balance:
+
+```sh
+# Default: 2× working size
+./make.ghostty.background.sh -a 2 path/to/source.jpg path/to/output.png
+
+# Fastest: process directly at 3840×2160
+./make.ghostty.background.sh -a 1 path/to/source.jpg path/to/output.png
+
+# Previous 8× working size
+./make.ghostty.background.sh -a 8 path/to/source.jpg path/to/output.png
+```
+
+Scales from 1 to 8 are supported. Contrast, saturation, brightness, center cropping,
+and output dimensions use the same settings at every scale; slight pixel and HSL
+statistic differences between scales are expected.
+
 Run `./make.ghostty.background.sh -h` for detailed options.
 
